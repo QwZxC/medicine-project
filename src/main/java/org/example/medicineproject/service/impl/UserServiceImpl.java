@@ -2,6 +2,7 @@ package org.example.medicineproject.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.example.medicineproject.entity.user.User;
+import org.example.medicineproject.excpetion.AlreadyExistsException;
 import org.example.medicineproject.repository.UserRepository;
 import org.example.medicineproject.service.api.UserService;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,12 +19,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public void create(User user) {
         if (repository.existsByUsername(user.getUsername())) {
-            //TODO Добавить свои исключения
-            throw new RuntimeException("Пользователь с таким именем уже существует");
+            throw new AlreadyExistsException("Пользователь с таким именем уже существует");
         }
 
         if (repository.existsByEmail(user.getEmail())) {
-            throw new RuntimeException("Пользователь с таким email уже существует");
+            throw new AlreadyExistsException("Пользователь с таким email уже существует");
         }
 
         repository.save(user);
