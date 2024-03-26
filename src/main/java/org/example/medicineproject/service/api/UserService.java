@@ -3,6 +3,8 @@ package org.example.medicineproject.service.api;
 import org.example.medicineproject.entity.user.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 
+import java.util.UUID;
+
 public interface UserService {
 
     /**

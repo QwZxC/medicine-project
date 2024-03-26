@@ -3,12 +3,15 @@ package org.example.medicineproject.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.example.medicineproject.entity.user.User;
 import org.example.medicineproject.excpetion.AlreadyExistsException;
+import org.example.medicineproject.excpetion.NotFoundException;
 import org.example.medicineproject.repository.UserRepository;
 import org.example.medicineproject.service.api.UserService;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor

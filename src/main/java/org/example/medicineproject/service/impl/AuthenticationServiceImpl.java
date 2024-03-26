@@ -34,8 +34,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         userService.create(user);
 
-        var jwt = jwtService.generateToken(user);
-        return new JwtAuthenticationResponse(jwt);
+        String accessToken = jwtService.generateAccessToken(user);
+        String refreshToken = jwtService.generateRefreshToken(user);
+        return new JwtAuthenticationResponse(accessToken, refreshToken);
     }
 
     @Override
@@ -49,7 +50,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                 .userDetailsService()
                 .loadUserByUsername(request.getUsername());
 
-        var jwt = jwtService.generateToken(user);
-        return new JwtAuthenticationResponse(jwt);
+        String accessToken = jwtService.generateAccessToken(user);
+        String refreshToken = jwtService.generateRefreshToken(user);
+        return new JwtAuthenticationResponse(accessToken, refreshToken);
+    }
+
+    @Override
+    public JwtAuthenticationResponse refresh(String refreshToken) {
+        return jwtService.refreshUserTokens(refreshToken);
     }
 }

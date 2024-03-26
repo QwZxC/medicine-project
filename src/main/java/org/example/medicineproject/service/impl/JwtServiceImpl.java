@@ -5,9 +5,13 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.RequiredArgsConstructor;
+import org.example.medicineproject.dto.JwtAuthenticationResponse;
 import org.example.medicineproject.entity.user.User;
 import org.example.medicineproject.service.api.JwtService;
+import org.example.medicineproject.service.api.UserService;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -18,29 +22,41 @@ import java.util.Map;
 import java.util.function.Function;
 
 @Service
+@RequiredArgsConstructor
 public class JwtServiceImpl implements JwtService {
 
+    private final UserService userService;
     @Value("${token.signing.key}")
     private String jwtSigningKey;
 
     @Override
-    public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
+    public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails, Date expiration) {
         return Jwts.builder().claims(extraClaims).subject(userDetails.getUsername())
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + 100000 * 60 * 24))
+                .expiration(expiration)
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256).compact();
     }
 
     @Override
-    public String generateToken(UserDetails userDetails) {
+    public String generateAccessToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
         if (userDetails instanceof User customUserDetails) {
             claims.put("id", customUserDetails.getId());
             claims.put("email", customUserDetails.getEmail());
             claims.put("role", customUserDetails.getRole());
         }
-        return generateToken(claims, userDetails);
+        return generateToken(claims, userDetails, new Date(System.currentTimeMillis() + 1000 * 60 * 24));
     }
+
+    @Override
+    public String generateRefreshToken(UserDetails userDetails) {
+        Map<String, Object> claims = new HashMap<>();
+        if (userDetails instanceof User customUserDetails) {
+            claims.put("id", customUserDetails.getId());
+        }
+        return generateToken(claims, userDetails, new Date(System.currentTimeMillis() + 1000000 * 60 * 24));
+    }
+
 
     @Override
     public boolean isTokenValid(String token, UserDetails userDetails) {
@@ -51,6 +67,16 @@ public class JwtServiceImpl implements JwtService {
     @Override
     public String extractUserName(String token) {
         return extractClaim(token, Claims::getSubject);
+    }
+
+    @Override
+    public JwtAuthenticationResponse refreshUserTokens(String refreshToken) {
+        if (!isTokenValid(refreshToken, userService.getByUsername(extractUserName(refreshToken)))) {
+            throw new AccessDeniedException("Отказано в доступе");
+        }
+        String userName = extractUserName(refreshToken);
+        User user = userService.getByUsername(userName);
+        return new JwtAuthenticationResponse(generateAccessToken(user), generateRefreshToken(user));
     }
 
     /**

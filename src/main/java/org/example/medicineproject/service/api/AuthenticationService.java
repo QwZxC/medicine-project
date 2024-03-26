@@ -10,7 +10,7 @@ public interface AuthenticationService {
      * Регистрация пользователя
      *
      * @param request данные пользователя
-     * @return токен
+     * @return токены доступа и обновления
      */
     JwtAuthenticationResponse signUp(SignUpRequest request);
 
@@ -18,7 +18,14 @@ public interface AuthenticationService {
      * Аутентификация пользователя
      *
      * @param request данные пользователя
-     * @return токен
+     * @return токены доступа и обновления
      */
     JwtAuthenticationResponse signIn(SignInRequest request);
+
+    /**
+     * Обновление токенов доступа и обновления
+     * @param refreshToken токен обновления
+     * @return токены доступа и обновления
+     */
+    JwtAuthenticationResponse refresh(String refreshToken);
 }
