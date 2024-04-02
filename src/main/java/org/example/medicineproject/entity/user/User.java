@@ -1,29 +1,27 @@
 package org.example.medicineproject.entity.user;
 
 import jakarta.persistence.*;
-import lombok.*;
-import org.example.medicineproject.entity.user.Role;
+import lombok.Data;
+import org.example.medicineproject.entity.FavoriteDoctor;
+import org.example.medicineproject.entity.FavoriteHospital;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
 
 @Entity
-@Builder
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
+@Data
 @Table(name = "users")
 public class User implements UserDetails {
 
     @Id
     @Column(name = "uuid")
     @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+    private UUID uuid;
 
     @Column(name = "username", unique = true, nullable = false)
     private String username;
@@ -37,6 +35,12 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
     private Role role;
+
+    @OneToMany(mappedBy = "user")
+    private transient List<FavoriteHospital> favoriteHospitals = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private transient List<FavoriteDoctor> favoriteDoctors = new ArrayList<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

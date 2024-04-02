@@ -26,4 +26,7 @@ public class Hospital {
 
     @OneToMany(mappedBy = "hospital")
     private List<Doctor> doctors = new ArrayList<>();
+
+    @OneToMany(mappedBy = "hospital")
+    private List<FavoriteHospital> favoriteHospitals = new ArrayList<>();
 }

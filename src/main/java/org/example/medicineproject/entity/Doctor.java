@@ -3,6 +3,8 @@ package org.example.medicineproject.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -21,4 +23,7 @@ public class Doctor {
     @ManyToOne
     @JoinColumn(name = "hospital_id")
     private Hospital hospital;
+
+    @OneToMany(mappedBy = "doctor")
+    private List<FavoriteDoctor> favoriteDoctors = new ArrayList<>();
 }
