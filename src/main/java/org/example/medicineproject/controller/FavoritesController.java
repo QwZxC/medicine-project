@@ -1,9 +1,11 @@
 package org.example.medicineproject.controller;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.example.medicineproject.dto.DoctorDto;
 import org.example.medicineproject.dto.HospitalDto;
 import org.example.medicineproject.service.api.FavoriteService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,5 +37,19 @@ public class FavoritesController {
     @PostMapping("hospitals")
     public ResponseEntity<HospitalDto> addFavoriteHospital(@RequestBody UUID hospitalUuid) {
         return ResponseEntity.ok(favoriteService.createFavoriteHospital(hospitalUuid));
+    }
+
+    @DeleteMapping("doctors")
+    @Transactional
+    public ResponseEntity<Object> deleteDoctorFromFavorites(@RequestBody UUID doctorUuid) {
+        favoriteService.deleteDoctorFromFavorites(doctorUuid);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @DeleteMapping("hospitals")
+    @Transactional
+    public ResponseEntity<Object> deleteHospitalFromFavorites(@RequestBody UUID hospitalUuid) {
+        favoriteService.deleteHospitalFromFavorites(hospitalUuid);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

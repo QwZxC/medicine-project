@@ -7,4 +7,5 @@ import java.util.UUID;
 
 public interface FavoriteDoctorRepository extends JpaRepository<FavoriteDoctor, UUID> {
 
+    void deleteByDoctorUuid(UUID doctorUuid);
 }

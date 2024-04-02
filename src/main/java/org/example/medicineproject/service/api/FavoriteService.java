@@ -13,4 +13,8 @@ public interface FavoriteService {
 
     DoctorDto createFavoriteDoctor(UUID doctorUuid);
     HospitalDto createFavoriteHospital(UUID hopitalUuid);
+
+    void deleteDoctorFromFavorites(UUID doctorUuid);
+
+    void deleteHospitalFromFavorites(UUID hospitalUuid);
 }

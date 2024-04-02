@@ -68,5 +68,15 @@ public class FavoriteServiceImpl implements FavoriteService {
         return modelMapper.map(hospital, HospitalDto.class);
     }
 
+    @Override
+    public void deleteDoctorFromFavorites(UUID doctorUuid) {
+        favoriteDoctorRepository.deleteByDoctorUuid(doctorUuid);
+    }
+
+    @Override
+    public void deleteHospitalFromFavorites(UUID hospitalUuid) {
+        favoriteHospitalRepository.deleteByHospitalUuid(hospitalUuid);
+    }
+
 
 }

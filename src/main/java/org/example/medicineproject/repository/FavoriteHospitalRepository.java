@@ -7,4 +7,5 @@ import java.util.UUID;
 
 public interface FavoriteHospitalRepository extends JpaRepository<FavoriteHospital, UUID> {
 
+    void deleteByHospitalUuid(UUID hospitalUuid);
 }

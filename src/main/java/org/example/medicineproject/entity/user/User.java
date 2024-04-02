@@ -1,7 +1,7 @@
 package org.example.medicineproject.entity.user;
 
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
 import org.example.medicineproject.entity.FavoriteDoctor;
 import org.example.medicineproject.entity.FavoriteHospital;
 import org.springframework.security.core.GrantedAuthority;
@@ -14,7 +14,10 @@ import java.util.List;
 import java.util.UUID;
 
 @Entity
+@Builder
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "users")
 public class User implements UserDetails {
 
@@ -40,6 +43,7 @@ public class User implements UserDetails {
     private transient List<FavoriteHospital> favoriteHospitals = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
+    @Transient
     private transient List<FavoriteDoctor> favoriteDoctors = new ArrayList<>();
 
     @Override
