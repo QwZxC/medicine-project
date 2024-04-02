@@ -1,9 +1,6 @@
 package org.example.medicineproject.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -27,6 +24,9 @@ public class Hospital {
     @OneToMany(mappedBy = "hospital")
     private List<Doctor> doctors = new ArrayList<>();
 
+    @ManyToOne
+    @JoinColumn(name = "city_id")
+    private City city;
     @OneToMany(mappedBy = "hospital")
     private List<FavoriteHospital> favoriteHospitals = new ArrayList<>();
 }
