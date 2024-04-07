@@ -3,6 +3,7 @@ package org.example.medicineproject.entity;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -27,6 +28,22 @@ public class Hospital {
     @ManyToOne
     @JoinColumn(name = "city_id")
     private City city;
+
     @OneToMany(mappedBy = "hospital")
     private List<FavoriteHospital> favoriteHospitals = new ArrayList<>();
+
+    @Column(name = "phone_number", nullable = false)
+    private String phoneNumber;
+
+    @Column(name = "address", nullable = false)
+    private String address;
+
+    @Column(name = "opening_time")
+    private LocalDateTime openingTime;
+
+    @Column(name = "closing_time")
+    private LocalDateTime closingTime;
+
+    @Column(name = "description")
+    private String description;
 }
